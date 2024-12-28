@@ -1,0 +1,134 @@
+<section id="installation" class="page-body">
+	<p class="text-content">Installation</p>
+	<h2 class="mb-4 mt-4"># Creating a <span class="bami">BAMI</span><span class="mi">MI</span> Application</h2>
+
+	<h5 class="mb-4 mt-4"># Installing Node.js and the BAMIMI Cli</h5>
+	<p class="text-content">
+		Before creating your first BAMIMI application, make sure that your local machine has 
+		<a href="https://nodejs.org/en/download">Node.js, NPM</a>  installed.
+	</p>
+	<p class="text-content mb-4">
+		Once you have NodeJs and NPM on your computer, we proceed to install BAMIMI Cli:
+	</p>
+	<div class="code-container-group">
+			<div class="position-relative code-container" id="contentInstallNpm">
+				<button class="btn btn-primary copy-button" data-clipboard-text="npm install -g @knfs-tech/bamimi-cli"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">//with npm
+npm install -g @knfs-tech/bamimi-cli</code></pre>
+			</div>
+			<div class="note-text">Or</div>
+			<div class="position-relative code-container" id="contentInstallYarn">
+				<button class="btn btn-primary copy-button" data-clipboard-text="yarn global add @knfs-tech/bamimi-cli"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">//with yarn
+yarn global add @knfs-tech/bamimi-cli</code></pre>
+			</div>
+	</div>
+
+	<h5 class="mb-4 mt-4"># Creating an Application</h5>
+	<p class="text-content mb-4">
+		Once you've installed Node.js, NPM, and the BAMIMI Cli, you're ready to create a new BAMIMI application:
+	</p>
+	<div class="position-relative code-container">
+		<button class="btn btn-primary copy-button" data-clipboard-text="bamimi-cli create demo-app"><i
+				class="fas fa-copy"></i></button>
+		<pre class="language-javascript"
+			tabindex="0"><code class="language-javascript">//Normal
+bamimi-cli create demo-app</code></pre>
+	</div>
+	<div class="note-text">Or</div>
+	<div class="position-relative code-container">
+		<button class="btn btn-primary copy-button" data-clipboard-text="npx bamimi-cli create demo-app"><i
+				class="fas fa-copy"></i></button>
+		<pre class="language-javascript"
+			tabindex="0"><code class="language-javascript">//With Npx
+npx bamimi-cli create demo-app</code></pre>
+	</div>
+	<p class="text-content mb-4">
+		The BAMIMI Cli will prompt you to select your preferred testing framework, database, and manager kit:
+	</p>
+	<div class="note-text">
+		<p>
+			You can choose whether to use Docker to build and deploy later
+		</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript" 
+				tabindex="0"><code class="language-javascript">? Would you like to include a Dockerfile? (Y/n)</code></pre>
+		</div>
+
+		<p>Do you want to use lint? This can create constraints that help you follow conventions, making your code syntax clearer
+		and more consistent</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">? Would you like to include ESLint configuration? (Y/n)</code></pre>
+		</div>
+
+		<p><a href="https://martinfowler.com/bliki/TestDrivenDevelopment.html" target="_blank" >TDD</a> standards are very popular, you can also choose to use testing to increase code quality later</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">? Would you like to include Test configuration? (Y/n)</code></pre>
+		</div>
+
+		<p>
+			Choose for yourself a type of database to use, here we will demo so choose none to save time
+		</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">? Which type of database would you like to use?
+  SQL
+  NoSQL
+> none
+</code></pre>
+		</div>
+		<p>
+			We will choose a tool to manage packages, as by default the local machine usually has npm so we choose <span>npm</span>.
+		</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">? Which type of package manager would you like to use?
+  yarn
+> npm
+  pnpm
+  none
+</code></pre>
+		</div>
+		<p class="text-content mb-4" >And now we will wait for the application system to create the structure and install the libraries</p>
+	</div>
+
+	<h5 class="mt-4 mb-2"># Start project in local</h5>
+	<p class="text-content mb-4">
+		Once the application has been created, you can start the local development server, which uses the dev script:
+	</p>
+	<div class="position-relative code-container">
+		<button class="btn btn-primary copy-button" data-clipboard-text="npm run start-dev"><i
+				class="fas fa-copy"></i></button>
+		<pre class="language-javascript" tabindex="0"><code class="language-javascript">//With Npm
+npm run start-dev</code></pre>
+	</div>
+	<div class="note-text">Or</div>
+	<div class="position-relative code-container">
+		<button class="btn btn-primary copy-button" data-clipboard-text="yarn start-dev"><i
+				class="fas fa-copy"></i></button>
+		<pre class="language-javascript" tabindex="0"><code class="language-javascript">//With Npm
+yarn start-dev</code></pre>
+	</div>
+
+	<h2 class="mb-4 mt-4"># Next step</h2>
+	<p class="text-content" >Now that you've created your BAMIMI app, you're probably wondering what to learn next. We strongly recommend that you
+	first familiarize yourself with how BAMIMI works by reading the following documentation:</p>
+	<ul class="next-step">
+		<li><a href="/0.5.3/?content=configure"
+      target="_parent">Configure</a></li>
+		<li> <a href="/0.5.3/?content=driect-structure"
+      target="_parent">Direct Structure</a></li>
+		<li> <a href="/0.5.3/?content=request-lifecycle"
+      target="_parent">Request Lifecycle</a></li>
+		<li> <a href="/0.5.3/?content=kernel"
+      target="_parent">Kernel</a></li>
+		<li> <a href="/0.5.3/?content=routing"
+      target="_parent">Routing</a></li>
+	</ul>
+</section>
