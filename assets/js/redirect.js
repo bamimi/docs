@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (latestVersion) {
 					const currentUrlParams = new URLSearchParams(window.location.search);
 
-					const newUrl = new URL(`docs/${latestVersion.version}`, window.location.origin);
+					const newUrl = new URL(`/docs/${latestVersion.version}`, window.location.origin);
 					newUrl.search = currentUrlParams.toString();
 
 					window.location.href = newUrl.toString();
