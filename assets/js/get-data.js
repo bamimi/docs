@@ -1,6 +1,6 @@
 
 async function getContent(version, content) {
-	const dataUrl = `/${version}/assets/data/contents/${content}.html`;
+	const dataUrl = `/docs/${version}/assets/data/contents/${content}.html`;
 	const data = await fetch(dataUrl)
 	if (data.ok) {
 		return data.text();
