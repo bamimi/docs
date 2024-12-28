@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const spinner = document.getElementById('spinner');
 
 	function redirectVersion() {
-		const dataUrl = `/assets/data/versions.json`;
+		const dataUrl = `docs/assets/data/versions.json`;
 
 		fetch(dataUrl)
 			.then(async (response) => {
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (latestVersion) {
 					const currentUrlParams = new URLSearchParams(window.location.search);
 
-					const newUrl = new URL(`/${latestVersion.version}`, window.location.origin);
+					const newUrl = new URL(`docs/${latestVersion.version}`, window.location.origin);
 					newUrl.search = currentUrlParams.toString();
 
 					window.location.href = newUrl.toString();
