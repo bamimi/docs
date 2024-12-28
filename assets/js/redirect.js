@@ -18,7 +18,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				const latestVersion = versions.find(versions => versions.latest === true)
 
 				if (latestVersion) {
-					window.location.href = `/${latestVersion.version}`;
+					const currentUrlParams = new URLSearchParams(window.location.search);
+
+					const newUrl = new URL(`/${latestVersion.version}`, window.location.origin);
+					newUrl.search = currentUrlParams.toString();
+
+					window.location.href = newUrl.toString();
 				}
 			})
 			.catch(error => {
