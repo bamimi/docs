@@ -1,0 +1,115 @@
+
+<section id="installation" class="page-body">
+	<p class="text-content">Routeing</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Basic</h2>
+	<div>
+		<p class="text-content">
+			The most basic BAMIMI routes are built on the <a href="https://expressjs.com/">Express.js</a> platform, accept a URI and a closure, providing a very simple
+			and clean method to define routes and behavior without the need for routing configuration files complicated:
+		</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iRoutes/web/index.js
+"use strict";
+const router = require("express").Router();
+
+router.get("/", (req, res, next) => {
+	res.send('Hello World!')
+});
+
+module.exports = router;
+</code></pre>
+		</div>
+		<h5 class="mb-4 mt-4"># The Default Route Files</h5>
+		<div>
+			<p class="text-content">
+				All BAMIMI routes are defined in your route files, which are located in the routes directory. These files are
+				automatically loaded by BAMIMI using the configuration specified in your application's <code>kernel/router/index.js</code> and
+				<code>kernel/index.js</code> file. The <code>routes/web/index.js</code> file defines routes that are for your web interface. These routes are
+				assigned the web middleware group, which provides features like session state and CSRF protection.
+				
+				For most applications, you will begin by defining routes in your <code>routes/web/index.js</code> file. The routes defined in
+				<code>routes/web/index.js</code> may be accessed by entering the defined route's URL in your browser. For example, you may access the
+				following route by navigating to http://example.com/demo in your browser:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iRoutes/web/index.js
+"use strict";
+const router = require("express").Router();
+
+router.get("/demo", require("@iApp/http/controllers/web/demo.controller").index);
+
+module.exports = router;
+</code></pre>
+			</div>
+		</div>
+
+		<h5 class="mb-4 mt-4"># API Routes</h5>
+		<div>
+			<p class="text-content">
+				The routes in <code>routes/api/index.js</code> are assigned to the api middleware group. Additionally, the /api URI
+				prefix is automatically applied to these routes, so you do not need to manually apply it to every route in the file. You
+				may change the prefix by modifying your application's <code>kernel/index.js</code> and <code>kernel/routes/index.js</code> file:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iRoutes/api/index.js
+"use strict";
+const router = require("express").Router();
+
+router.get("/user", require("@iApp/http/controllers/api/demo.controller").index);
+
+module.exports = router;
+</code></pre>
+			</div>
+		</div>
+
+		<h5 class="mb-4 mt-4"># Available Router Methods</h5>
+		<div>
+			<p class="text-content">
+				The router allows you to register routes that respond to any HTTP verb:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iRoutes/api/index.js
+router.get(uri, callback);
+router.post(uri, callback);
+router.put(uri, callback);
+router.patch(uri, callback);
+router.delete(uri, callback);
+router.all(uri, callback); // for all method
+
+</code></pre>
+			</div>
+		</div>
+
+		<h5 class="mb-4 mt-4"># CSRF Protection</h5>
+		<div>
+			<p class="text-content">
+				Remember, any HTML forms pointing to POST, PUT, PATCH, or DELETE routes that are defined in the web routes file should
+				include a CSRF token field. Otherwise, the request will be rejected. You can read more about CSRF protection in the <a href="/doc/0.6.0/?content=me_csrf">CSRF
+				documentation</a>:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iRoutes/web/index.js
+"use strict";
+const router = require("express")
+
+const { protect: csrfProtect } = require("@knfs-tech/csrf")
+
+router.post(
+	"/save-form", 
+	csrfProtect,
+	require("@iApp/http/controllers/web/demo.controller").saveForm
+);
+</code></pre>
+			</div>
+			<div class="position-relative code-container">
+				<pre class="language-javascript"><code class="language-html" id="html-code"></code></pre>
+			</div>
+		</div>
+	</div>
+	<a href="https://expressjs.com/en/starter/basic-routing.html">View in express.js</a>
+</section>

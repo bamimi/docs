@@ -1,0 +1,161 @@
+<section id="direct-strucutre" class="page-body">
+	<p class="text-content">Directory Structure</p>
+	<h2 class="mb-4 mt-4"># Introduction</h2>
+	<p class="text-content">
+		The default BAMINI application structure is intended to provide a great starting point for both large and small
+		applications. But you are free to arrange your apps however you want..
+	</p>
+	<img src="assets/img/direct-structure.png" alt="direction structure" width="250">
+	<h2 class="mb-4 mt-4"># The Root Direction</h2>
+	<div>
+		<h5 class="mb-4 mt-4"># The App Directory</h5>
+		<p class="text-content">
+			The <code>app</code> directory contains the core code of your application. We'll explore this directory in more detail soon; however,
+			almost all of the code in your application will be in this directory.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Bootstrap Directory</h5>
+		<p class="text-content">
+			The <code>bootstrap</code> directory contains <code>index.js</code> and <code>socket.js</code> files to bootstrap the framework. This directory also contains a cache directory
+			containing skeletonized files for performance optimization, such as routes </p>
+		
+		<h5 class="mb-4 mt-4"># The Configs Directory</h5>
+		<p class="text-content">
+			The <code>configs</code> directory, as its name suggests, contains all your application configuration files. You should read through
+			all of these files and familiarize yourself with all the options available to you.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Database Directory</h5>
+		<p class="text-content">
+			The <code>database</code> directory contains your database migrations and seeds. If you wish, you may also use this directory to hold an
+			SQLite database.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Interfaces Directory</h5>
+		<p class="text-content">
+			The <code>interfaces</code> directory contains interfaces for web and API, we understand that all communication between users and applications, between applications
+			and applications, needs to go through interfaces.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Kernel Directory</h5>
+		<p class="text-content">
+			The <code>kernel</code> directory contains all service declarations and instantiations, including services integrated into the main activity flow, which
+			will be active throughout the life of the framework.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Libs Directory</h5>
+		<p class="text-content">
+			The <code>libs</code> directory contains the entire library developed specifically for your project.
+		</p>
+		<h5 class="mb-4 mt-4"># The Modules Directory</h5>
+		<p class="text-content">
+			The <code>modules</code> directory contains functional modules you can split in your project, this is just an optional.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Notifications Directory</h5>
+		<p class="text-content">
+			The <code>notifications</code> directory contains extensions of information you will use in projects such as email templates.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Public Directory</h5>
+		<p class="text-content">
+			The <code>public</code> directory houses your assets such as images, JavaScript, CSS and content you want to publish, photos, etc.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Routes Directory</h5>
+		<p class="text-content">
+			The <code>routes</code> directory contains all of the route definitions for your application. By default, four route types are included with BAMIMI:
+			api, cli, web, socket
+		</p>
+		<p class="text-content">
+			The <code>api</code> directory contains routes that are intended to be stateless, so requests entering the application through these routes are intended
+			to be authenticated via tokens and will not have access to session state.
+		</p>
+		<p class="text-content">
+			The <code>cli</code> directory is where you may define all of your closure based console commands. Each closure is bound to a command instance allowing
+			a simple approach to interacting with each command's IO methods. Even though this file does not define HTTP routes, it
+			defines console based entry points (routes) into your application. You may also schedule tasks in the <code>cli</code>.
+		</p>
+		<p class="text-content">
+			The <code>web</code> directory contains routes that BAMIMI places in the web middleware group, which provides session state,
+			CSRF
+			protection, and cookie encryption. If your application does not offer a stateless, RESTful API then all your routes
+			will
+			most likely be defined in this.
+		</p>
+		<p class="text-content">
+			The <code>socket</code> directory contains all the paths for real-time processing, or publishing events to the client.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Storage Directory</h5>
+		<p class="text-content">
+			The <code>storage</code> directory contains all the content you want to save such as file uploads, cache, content system.
+		</p>
+		<h5 class="mb-4 mt-4"> # The Tests Directory</h5>
+		<p class="text-content">
+			The <code>tests</code> directory contains your automated tests. Examples of <code>jest.js</code> tests
+			This folder will be placed outside <code>src</code>, in fact during the project build process this folder will not be built
+		</p>
+		<h5 class="mb-4 mt-4"> # The Node Modules Directory</h5>
+		<p class="text-content">
+			The <code>node_modules</code> directory contains your Packages dependency
+		</p>
+	</div>
+
+	<h2 class="mb-4 mt-4"># The App Direction</h2>
+	<img src="assets/img/app-structure.png" alt="app structure" width="250">
+	<div class="mt-4">
+		<h5 class="mb-4 mt-4"># The Commands Directory</h5>
+		<p class="text-content">
+			The <code>commands</code> directory contains all processing logic of the custom bamimi-enjoy commands for your application.
+			command.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Emails Directory</h5>
+		<p class="text-content">
+			The <code>emails</code> directory contains contains all the functions that represent emails sent by your application. Mail objects allow you to encapsulate all the
+			logic that builds an email in one simple class. If you want to can create these by bamimi-cli email:generate
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Http Directory</h5>
+		<p class="text-content">
+			The <code>http</code> directory contains your controllers, middleware, and form requests. Almost all of the logic to handle requests entering your
+			application will be placed in this directory.
+		</p>
+		<p  class="text-content">
+			The <code>controllers</code> directory contains logic files manage the processing logic for HTTP requests. They act as intermediaries between requests from the client
+			(request) and responses from the server (response).
+		</p>
+
+		<p class="text-content">
+			The <code>errors</code> directory contains all custom http errors for your application.
+		</p>
+
+		<p class="text-content">
+			The <code>middleware</code> directory contains files that support logic handling and handling of problems in the entire request.
+		</p>
+
+		<p class="text-content">
+			The <code>requests</code> directory contains processing files for input requests, such as data validation, you can create it with the command <code>bamimi-cli request:generate</code>
+		</p>
+
+		<h5 class="mb-4 mt-4"># The Jobs Directory</h5>
+		<p class="text-content">
+			The <code>jobs</code> directory contains the queueable jobs for your application. Jobs may be queued by your application or run synchronously within the current
+			request lifecycle. Jobs that run synchronously during the current request are sometimes referred to as "commands" since
+			they are an implementation of the command pattern. If you want to can create these by <code>bamimi-cli jobs:generate</code>
+		</p>
+
+		<h5 class="mb-4 mt-4"># The ORMs Directory</h5>
+		<p class="text-content">
+			The <code>ORMs</code>(Object Relationship Models) directory contains all of your Database model. The ORMs included with BAMIMI kernel a beautiful, simple <a href="https://sequelize.org/">Sequelize.js</a> implementation for
+			working with your database. Each database table has a corresponding "Object Relationship Model" which is used to interact with that table.
+			Models allow you to query for data in your tables, as well as insert new records into the table.
+		</p>
+
+		<h5 class="mb-4 mt-4"># The services Directory</h5>
+		<p class="text-content">
+			The <code>services</code> directory contains business logic files
+		</p>
+	</div>
+</section>

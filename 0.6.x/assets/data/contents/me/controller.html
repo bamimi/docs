@@ -1,0 +1,104 @@
+
+<section id="installation" class="page-body">
+	<p class="text-content">Controller</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			Instead of defining all of your request handling logic as closures in your route files, you may wish to organize this
+			behavior using "controller" file. Controllers can group related request handling logic into a single class. For
+			example, a <code>UserController</code> class might handle all incoming requests related to users, including showing, creating,
+			updating, and deleting users. By default, controllers are stored in the <code>app/http/controllers</code> directory.
+		</p>
+	</div>
+
+	<h2 class="mb-4 mt-4" id="introduction"># Writing Controllers</h2>
+	<div>
+		<p class="text-content">
+			Here we divide controllers into two types: api controllers and web controllers, you can find them
+			<code>app/http/controllers/api</code> and <code>app/http/controllers/web</code>
+		</p>
+		<h5 class="mb-4 mt-4"># Start A Controller</h5>
+		<div>
+			<p class="text-content">
+				To quickly generate a new controller, you may run the <code>controller:generate</code> command. By default, all of the
+				controllers for your application are stored in the <code>app/http/controllers</code> directory:
+			</p>
+			<div class="position-relative code-container" id="contentInstallNpm">
+				<button class="btn btn-primary copy-button" data-clipboard-text="npx @knfs-tech/bamimi-cli controller:generate user"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">//with npx
+npx @knfs-tech/bamimi-cli controller:generate user</code></pre>
+			</div>
+			<a href="https://github.com/knfs-library/bamimi-cli">See more options</a>
+			<p class="text-content">
+				Let's take a look at an example of a basic controller. A controller may have any number of public methods which will
+				respond to incoming HTTP requests:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iApp/http/controllers/user.controller.js
+"use strict";
+
+module.exports = {
+	index: async function (req, res, next) {
+		try {
+			res.send("Hello World")
+		} catch(error) {
+			next(error)
+		}
+	},
+};
+</code></pre>
+			</div>
+		</div>
+		<h5 class="mb-4 mt-4"># Web Controller</h5>
+		<div>
+			<p class="text-content">
+				To quickly generate a web controller, you may run the <code>controller:generate -t web</code> command. By
+				default, all of the
+				web controllers for your application are stored in the <code>app/http/controllers/web</code> directory:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iApp/http/controllers/web/user.controller.js
+"use strict";
+		
+module.exports = {
+	index: async function (req, res, next) {
+		try {
+			res.send({msg: 'Hello World'})
+		} catch(error) {
+			next(error)
+		}
+	},
+};
+	</code></pre>
+			</div>
+		</div>
+		</div>
+		<h5 class="mb-4 mt-4"># API Controller</h5>
+		<div>
+			<p class="text-content">
+				To quickly generate a api controller, you may run the <code>controller:generate -t api</code> command. By default, all of the
+				api controllers for your application are stored in the <code>app/http/controllers/api</code> directory:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iApp/http/controllers/api/user.controller.js
+"use strict";
+
+module.exports = {
+	index: async function (req, res, next) {
+		try {
+			res.status(200).sendData({msg: 'ok'})
+		} catch(error) {
+			next(error)
+		}
+	},
+};
+</code></pre>
+			</div>
+			</div>
+		</div>
+	</div>
+</section>

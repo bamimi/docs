@@ -1,0 +1,99 @@
+<section id="installation" class="page-body">
+	<p class="text-content">CSRF</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			Cross-site request forgeries are a type of malicious exploit whereby unauthorized commands are performed on behalf of an
+			authenticated user. Thankfully, BAMIMI makes it easy to protect your application from <a href="https://en.wikipedia.org/wiki/Cross-site_request_forgery" target="_blank">cross-site request forgery</a> (CSRF)
+			attacks.
+		</p>
+		
+		<h5 class="mb-4 mt-4"># An Explanation of the Vulnerability</h5>
+		<p class="text-content">
+			In case you're not familiar with cross-site request forgeries, let's discuss an example of how this vulnerability can be
+			exploited. Imagine your application has a <code>/user/email</code> route that accepts a <code>POST</code> request to change the authenticated
+			user's email address. Most likely, this route expects an email input field to contain the email address the user would
+			like to begin using.
+			
+			Without CSRF protection, a malicious website could create an HTML form that points to your application's <code>/user/email</code>
+			route and submits the malicious user's own email address:
+		</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript"><code class="language-html" id="html-code-csrf"></code></pre>
+		</div>
+		<p class="text-content">
+			If the malicious website automatically submits the form when the page is loaded, the malicious user only needs to lure
+			an unsuspecting user of your application to visit their website and their email address will be changed in your
+			application.
+			
+			To prevent this vulnerability, we need to inspect every incoming <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, or <code>DELETE</code> request for a secret
+			session value that the malicious application is unable to access.
+		</p>
+	</div>
+	<h2 class="mb-4 mt-4" id="introduction"># Preventing CSRF Requests</h2>
+	<div>
+		<p class="text-content">
+			BAMIMI automatically generates a CSRF "token" for each active user session or cookie (depending on configuration)
+			managed by the application. This token is used to verify that the authenticated user is the one actually making the
+			request to the application. Because this token is stored in the user's session (or cookie) and changes every time the
+			session is recreated, it cannot be accessed by a malicious application. 
+			The current session's CSRF token can be accessed through the request's session or through the local variable <code>csrfToken</code>:
+		</p>
+		<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iRoutes/web/index.js
+"use strict";
+const router = require("express").
+
+const { protect: csrfProtect } = require("@knfs-tech/csrf")
+
+router.post(
+	"/save-form", 
+	csrfProtect,
+	(req, res, next) => {
+		console.log(csrfToken)
+		next();
+	}
+);
+</code></pre>
+		</div>
+		<p class="text-content">
+			You can also configure further at <code>kernel/index.js</code>:
+		</p>
+		<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iKernel/index.js
+"use strict";
+...
+exports.middleware = {
+	...,
+	web: [
+		...,
+		csrf.generate({
+			tokenLength: 24,
+			storage: {
+				type: csrf.CONSTANT.STORAGE.COOKIE,
+				options: {
+					httpOnly: true,
+					maxAge: 1 * 24 * 60 * 60 * 1000, // 1days
+					secure: process.env.NODE_ENV === 'production' ? true : false
+				}
+			}
+		}),
+		csrf.setTokenLocalsParam, 
+		....
+	]
+}
+</code></pre>
+		</div>
+		<p class="text-content">
+			Anytime you define a "POST", "PUT", "PATCH", or "DELETE" HTML form in your application, you should include a hidden CSRF
+			<code>_csrf</code> field in the form so that the CSRF protection middleware can validate the request. For convenience, you may use
+			the <code>$_csrf.input()</code> Blade directive to generate the hidden token input field:
+		</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript"><code class="language-html" id="html-code-prevent-csrf"></code></pre>
+		</div>
+	</div>
+	Detail at <a href="https://www.npmjs.com/package/@knfs-tech/csrf">@knfs-tech/csrf</a>
+</section>

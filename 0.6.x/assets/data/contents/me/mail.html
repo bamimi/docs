@@ -1,0 +1,114 @@
+<section id="installation" class="page-body">
+	<p class="text-content">Mail</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			Sending emails doesn't have to be complicated. BAMIMI provides a simple, clean email API powered by the popular
+			<a href="https://www.nodemailer.com/about/">nodemailer</a>. BAMIMI and <a href="">nodemailer</a> provide drivers for sending emails via SMTP, Amazon SES, etc. and sendmail,
+			which allows you to quickly start sending mail via the local or cloud-based service of your choice.
+		</p>
+
+		<h5 class="mb-4 mt-4"># Configuration</h5>
+		<div>
+			<p class="text-content">
+				BAMIMI email services can be configured through your application's <code>configs/mail-server.js</code> configuration file. Each
+				mailer is configured in this file
+				
+				In your mail configuration file, you will find the mail sender configuration object. This object contains sample
+				configuration entries for each major mail driver/transport supported by BAMIMI
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iConfigs/mail-server.js
+"use strict";
+require("dotenv").config();
+
+module.exports = {
+    host: process.env.HOST_MAIL,
+    port: process.env.PORT_MAIL,
+    secure: false,
+    auth: {
+        user: process.env.USER_MAIL, 
+        pass: process.env.PASS_MAIL
+    }
+};
+
+</code></pre>
+			</div>
+			<p class="text-content">
+				In addition, you can also edit, create and manage templates in <code>notifications/emails</code> and <code>configs/notifications.js</code>
+			</p>
+		</div>
+	</div>
+	<h2 class="mb-4 mt-4" id="introduction"># Writing Emails</h2>
+	<div>
+		<div class="position-relative code-container" id="contentInstallNpm">
+			<button class="btn btn-primary copy-button"
+				data-clipboard-text="npx @knfs-tech/bamimi-cli@latest email:generate demoEmail -tn demoEmail -job demoEmail"><i class="fas fa-copy"></i></button>
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//with npx
+npx @knfs-tech/bamimi-cli@latest email:generate demoEmail -tn demoEmail -job demoEmail
+</code></pre>
+		</div>
+		<p class="text-content">
+			After running command line, the system immediately creates the following files:
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iApp/emails/demoEmail.email.js
+"use strict";
+
+const { renderTemplate } = require("@iUtils/mail");
+const { QueueManager } = require("@knfs-tech/bamimi-schedule")
+module.exports = (data) => {
+const html = renderTemplate("demoEmail.ejs");
+
+QueueManager
+	.singleton()
+	.getQueue("demoEmail")
+	.add("demoEmail", {
+		to: data.email, 
+		subject: "Welcome to BAMIMI land", 
+		html: html});
+};
+</code></pre>
+		</div>
+		<p class="text-content">
+			At <code>demoEmail.job.js</code>, The job performs retrieving data from the queue and handles sending email
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iApp/jobs/demoEmail.job.js
+"use strict";
+
+const { sendMail } = require("@iUtils/mail");
+module.exports = {
+	name: "demoEmail",
+	queue: "demoEmail",
+	handle: async function (job) {
+		await sendMail(job.data); 
+	}
+};
+</code></pre>
+		</div>
+		<p class="text-content">
+			<code>demoEmail.ejs</code> is the default email template created by BAMIMI
+		</p>
+		<div class="position-relative code-container">
+			<pre class="language-javascript"><code class="language-html" id="html-mail"></code></pre>
+		</div>
+		<p class="text-content">
+			Along with that, you need to go to file config of job and add the information of the job you want to run
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iConfigs/job.js
+
+"use strict";
+
+module.exports = [
+    {
+        name: "demoEmail",
+        func: require("@iApp/jobs/demoEmail.job"),
+        onMain: false //To set true if you want to run it concurrently on main processing
+    },
+];
+</code></pre>
+		</div>
+	</div>
+</section>

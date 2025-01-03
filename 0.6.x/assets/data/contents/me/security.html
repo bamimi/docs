@@ -1,0 +1,98 @@
+<section id="installation" class="page-body">
+	<p class="text-content">Security</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			In fact, inexperienced developers often do not pay attention to security issues, leaving the system vulnerable to
+			attacks. Common vulnerabilities include <code>SQL Injection</code>, <code>CSRF</code>, <code>XSS</code>, <code>Clickjacking</code>, <code>CORS</code>, etc... Don't worry, BAMIMI
+			has tried to handle this vulnerability for you by importing reputable libraries to handle it. You can see it at the
+			config <code>configs/security.js</code> and middleware <code>app/http/middleware/security.mid.js</code>
+		</p>
+	</div>
+
+	<h2 class="mb-4 mt-4" id="introduction"># How Did BAMIMI Handle Them?</h2>
+	<div>
+		<h5 class="mb-4 mt-4"># SQL Injection</h5>
+		<div>
+			<p class="text-content">
+				<a href="https://owasp.org/www-community/attacks/SQL_Injection">SQL Injection</a> is a type of security vulnerability that occurs when an attacker is able to manipulate SQL queries by
+				injecting malicious input into an application's database query. This can lead to unintended behavior such as
+				unauthorized access, data leakage, or data manipulation in the database.
+			</p>
+			<p class="text-content">
+				<strong>BAMIMI handle </strong>: Using <code>Sequelize</code> helps cover the problem of using queries directly in the code, reducing the possibility of passing
+				invalid syntax. Besides, you still need to validate data to increase safety.
+			</p>
+		</div>
+
+		<h5 class="mb-4 mt-4"># CSRF</h5>
+		<div>
+			<p class="text-content">
+				<a href="https://owasp.org/www-community/attacks/csrf">Cross-Site Request Forgery (CSRF)</a> is an attack that forces an end user to execute unwanted actions on a web application
+				in which they’re currently authenticated. With a little help of social engineering (such as sending a link via email or
+				chat), an attacker may trick the users of a web application into executing actions of the attacker’s choosing. If the
+				victim is a normal user, a successful CSRF attack can force the user to perform state changing requests like
+				transferring funds, changing their email address, and so forth. If the victim is an administrative account, CSRF can
+				compromise the entire web application.
+			</p>
+			<p class="text-content">
+				<strong>BAMIMI handle </strong>: Using <code>@knfs-tech/csrf</code> library to determine the real request, see <a href="docs/0.6.x/?content=me_csrf">CSRF section</a> for details
+			</p>
+		</div>
+
+		<h5 class="mb-4 mt-4"># XSS</h5>
+		<div>
+			<p class="text-content">
+				<a href="https://owasp.org/www-community/attacks/xss">Cross-Site Scripting (XSS)</a> attacks are a type of injection, in which malicious scripts are injected into otherwise
+				benign and trusted websites. XSS attacks occur when an attacker uses a web application to send malicious code, generally
+				in the form of a browser side script, to a different end user. Flaws that allow these attacks to succeed are quite
+				widespread and occur anywhere a web application uses input from a user within the output it generates without validating
+				or encoding it.</p>
+			<p class="text-content">
+				<strong>BAMIMI handle </strong>: Using <a href="https://helmetjs.github.io/">Helmet.js</a> handle X-XSS-Protection enables XSS filtering in the browser, preventing XSS attacks without having to implement
+				additional processing logic. Besides, there is support for adding <a href="https://www.npmjs.com/package/xss">Xss</a> to change the tag/script data structure, increasing security.
+			</p>
+		</div>
+
+		<h5 class="mb-4 mt-4"># Clickjacking</h5>
+		<div>
+			<p class="text-content">
+				<a href="https://owasp.org/www-community/attacks/Clickjacking">Clickjacking</a>, also known as a “UI redress attack”, is when an attacker uses multiple transparent or opaque layers to
+				trick a user into clicking on a button or link on another page when they were intending to click on the top level page.
+				Thus, the attacker is “hijacking” clicks meant for their page and routing them to another page, most likely owned by
+				another application, domain, or both.</p>
+			<p class="text-content">
+				<strong>BAMIMI handle </strong>: Using <a href="https://helmetjs.github.io/">Helmet.js</a> sets the X-Frame-Options header, protecting the app from displaying web pages in iframes of malicious sites.
+			</p>
+		</div>
+
+		<h5 class="mb-4 mt-4"># MIME type sniffing</h5>
+		<div>
+			<p class="text-content">
+				<a href="https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html">MIME</a> type sniffing is an operation conducted by many browsers. Each browser behaves differently on that matter, but
+				overall, MIME sniffing is an action where they determine a page content type depending on that page content. This is can
+				be dangerous as it could allow attackers to hide HTML code into a .jpg file, and have the visitor's browser interpret
+				the page and execute client code (XSS) because the browser determined the file was HTML code instead of a JPG image.</p>
+				<p class="text-content">
+					<strong>BAMIMI handle </strong>: Using <a href="https://helmetjs.github.io/">Helmet.js</a> sets the X-Content-Type-Options
+					header, prevents the browser from automatically determining the document's MIME type, thereby helping prevent MIME sniffing
+					attacks.
+				</p>
+		</div>
+
+		<h5 class="mb-4 mt-4"># CORS</h5>
+		<div>
+			<p class="text-content">
+				<a href="https://owasp.org/www-community/attacks/CORS_OriginHeaderScrutiny">CORS</a> stands for Cross-Origin Resource Sharing.
+				Is a feature offering the possibility for:
+				<li>A web application to expose resources to all or restricted domain.</li>
+				<li>A web client to make AJAX request for resource on other domain than is source domain.</li>
+				This article will focus on the role of the Origin header in the exchange between web client and web application.</p>
+				<p class="text-content">
+					<strong>BAMIMI handle </strong>: Using CORS restricting how web pages can request data from external sites. You can config it in <code>app/configs/auth.js</code>
+				</p>
+		</div>
+		
+	
+	</div>
+</section>

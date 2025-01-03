@@ -1,0 +1,121 @@
+
+<section id="installation" class="page-body">
+	<p class="text-content">Validation</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			Validating data before entering the system is extremely important, a step that helps increase the accuracy and security
+			of the system. Helps ensure data sent from outside will always be correct and complete without errors. BAMIMI has also
+			incorporated that feature into the framework with support from: <a href="https://www.npmjs.com/package/express-validator" target="_blank">Express Validator</a>
+		</p>
+	</div>
+	<h2 class="mb-4 mt-4" id="introduction"># Two validation types</h2>
+	<div>
+		<p class="text-content">
+			Basically, we have the main request that easily causes errors from the API and the web. Each type of endpoint will have
+			different ways of responding and displaying, so BAMIMI is dividing it into two types: 
+			Web (at <code>kernel/request/validationWeb.js</code>) and API (at <code>kernel/request/validationApi.js</code>). 
+			You can create a request by command <code>request:generate</code>
+		</p>
+		<div class="position-relative code-container" id="contentInstallNpm">
+				<button class="btn btn-primary copy-button" data-clipboard-text="npx @knfs-tech/bamimi-cli request:generate create"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">//with npx
+npx @knfs-tech/bamimi-cli request:generate create</code></pre>
+		</div>
+		<p class="text-content">
+			You will now have a file <code>app/http/requests/create.req.js</code>
+		</p>
+		<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"tabindex="0"><code class="language-javascript">//@iApp/http/requests/create.req.js
+"use strict";
+const { body } = require("express-validator");
+
+module.exports = [
+// demo implementation
+]
+</code></pre>
+		</div>
+		<p class="text-content">
+			and now you can apply them to routes
+		</p>
+		<h5 class="mb-4 mt-4"># Web Validation</h5>
+		<div>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"tabindex="0"><code class="language-javascript">//@iRoutes/web/index.js
+"use strict";
+const router = require("express").
+
+const { validateWeb: validate } = require("@iKernel/request")
+
+const validationRule = require("@iApp/http/requests/create.req")
+
+const { protect: csrfProtect } = require("@knfs-tech/csrf")
+
+router.post(
+	"/save-form-web", 
+	csrfProtect,
+	validate(validationRule)
+	require("@iApp/http/controllers/web/demo").saveForm
+); // with web
+</code></pre>
+			</div>
+			<p class="text-content">
+				and you can cover the errors in WebUI:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"tabindex="0"><code class="language-javascript">//@iInterfaces/web/pages/index.js
+<% if (messages.errors) { %>
+	<% for (const error of messages.errors) { %>
+		<%= error %>
+	<% } %>
+<% } %>
+</code></pre>
+			</div>
+		</div>
+		<h5 class="mb-4 mt-4"># API Validation</h5>
+		<div>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"tabindex="0"><code class="language-javascript">//@iRoutes/api/index.js
+"use strict";
+const router = require("express").
+
+const { validateApi: validate } = require("@iKernel/request")
+
+const validationRule = require("@iApp/http/requests/create.req")
+
+const { protect: csrfProtect } = require("@knfs-tech/csrf")
+
+router.post(
+	"/save-form", 
+	csrfProtect,
+	validate(validationRule)
+	require("@iApp/http/controllers/api/demo").saveForm
+); 
+</code></pre>
+			</div>
+		</div>
+		<p class="text-content">
+			and you will receive error json message:
+		</p>
+		<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"tabindex="0"><code class="language-javascript">{
+	"meta": {
+		"content": "Bad Request",
+		"code": 400
+	},
+	"errors": [
+		{
+			value: "....",
+			msg: "...",
+			param: "...",
+			location: "..."
+		}
+	]
+}
+</code></pre>
+			</div>
+		</div>
+	</div>
+</section>
