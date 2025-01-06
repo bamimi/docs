@@ -289,6 +289,7 @@ a {
 	border: none;
 	padding-left: 1em;
 	padding-right: 1em;
+	background: transparent;
 }
 
 #search input:focus,
