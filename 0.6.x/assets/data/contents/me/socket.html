@@ -4,7 +4,110 @@
 	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
 	<div>
 		<p class="text-content">
-			You can refer to the documentation <a href="https://www.npmjs.com/package/@knfs-tech/bamimi-socket.io">@knfs-tech/bamimi-socket.io</a>
+			Many modern web applications require real-time communication to provide instant updates, notifications, or interactions
+			to their users. Implementing real-time functionality can often be complex and require significant effort to manage
+			connections, handle events, and ensure scalability. For this reason, BAMIMI integrates Socket.IO as a built-in feature,
+			allowing you to implement real-time communication quickly, efficiently, and seamlessly.
+		
+			At its core, BAMIMI's real-time communication facilities are powered by <a href="https://www.npmjs.com/package/@knfs-tech/bamimi-socket.io">@knfs-tech/bamimi-socket.io</a>, 
+			which provides a
+			structured approach to manage real-time connections and broadcasting. The middleware defines how events are handled and
+			connections are maintained between the server and clients. For example, BAMIMI supports event namespaces to segregate
+			real-time functionality and rooms for group-based communication.
 		</p>
+		<p class="text-content">
+			Broadcasting is further simplified with built-in methods that allow you to send messages to all connected clients or
+			specific groups effortlessly. 
+			
+			The coding file for real-time communication is located at <code>routes/socket/index.js</code>, providing several
+			well-documented options to customize how Socket.IO operates within your application. This setup ensures developers can
+			tailor real-time behavior to meet the specific needs of their projects, whether it’s for live chat, gaming, or
+			collaborative tools.
+		</p>
+	</div>
+
+	<h2 class="mb-4 mt-4" id="introduction"># Writing A Channel</h2>
+	<div>
+		<h5 class="mb-4 mt-4"># Configuration</h5>
+		<div>
+			<p class="text-content">
+				You can configure the socket information like cors, transport, ports to open you can choose whether to open the socket or not <code>configs/socket.js</code>
+			</p>
+			<div class="position-relative code-container">
+<pre class="language-javascript"><code class="language-javascript">//src/configs/socket.js
+"use strict";
+require("dotenv").config();
+
+
+module.exports = {
+    cors: {
+        origin: "*",
+        transports: ["websocket", "polling"],
+    },
+    transports: ["websocket", "polling"],
+    use: process.env.USE_SOCKET == "true" ? true : false
+};
+
+</code></pre>
+			</div>
+		</div>
+
+		<p class="text-content">
+			You can declare socket.io's route integration in many places, but always centralize it in
+			<code>routes/socket/index.js</code>.
+			The base will follow it to find out your declared configurations
+		</p>
+		<h5 class="mb-4 mt-4"># Example</h5>
+		<div>
+			<p class="text-content">
+				For example, in the case of a processing message when processing an uploaded excel file:
+			</p>
+			<div class="position-relative code-container">
+<pre class="language-javascript"><code class="language-javascript">//src/routers/socket/index.js
+"use strict";
+
+const socket = require("@knfs-tech/bamimi-socket.io")
+
+const AuthMiddleware = require("@iApp/http/middleware/socketAuth.mid")
+
+const ImportChannel = require("@iApp/channels/import.channel")
+
+socket.on("/import", AuthMiddleware, ImportChannel.import)
+</code></pre>
+			</div>
+		<p class="text-content">
+			Handle pushing notifications out
+		</p>
+			<div class="position-relative code-container">
+<pre class="language-javascript"><code class="language-javascript">//src/app/channels/import.channel.js
+"use strict";
+
+const { getStorage } = require("@iKernel/cache")
+const cache = getStorage().new
+
+module.exports = {
+    import: async function (io, socket) {
+        const id = socket.handshake.currentUser.id;
+        const room = `import-excel:${id}`
+        await socket.join(room);
+        await cache.subscribe(`import-excel-process-${id}`, async (err, count) => {
+            if (err) {
+                console.error("Failed to subscribe to channels: ", err.message);
+            } else {
+                console.log(`Subscribed successfully to ${count} channels.`);
+            }
+        })
+        await cache.on("message", async (channel, message) => {
+            const msgData = await JSON.parse(String(message))
+            const event = "notify:"
+            console.info("event: " + event)
+            console.info("message: " + message)
+            io.of("/import").to(room).emit("get-log", msgData);
+        });
+    }
+}
+</code></pre>
+			</div>
+		</div>
 	</div>
 </section>
