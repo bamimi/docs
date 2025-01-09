@@ -50,7 +50,7 @@ module.exports = {
 				You can start with <code>itf:generate</code> command
 			</p>
 			<div class="position-relative code-container" id="contentInstallNpm">
-				<button class="btn btn-primary copy-button" data-clipboard-text="npx @knfs-tech/bamimi-cli controller:generate user"><i
+				<button class="btn btn-primary copy-button" data-clipboard-text="npx @knfs-tech/bamimi-cli itf:generate user"><i
 						class="fas fa-copy"></i></button>
 				<pre class="language-javascript"
 					tabindex="0"><code class="language-javascript">//with npx
@@ -83,13 +83,12 @@ module.exports = {
 			</div>
 			<p class="text-content">
 				Then in the controller you will apply the declared interface. 
-				The structure of this api will be a combination of <code>send</code> with a capital name, not the beginning of the interface you declared in
+				The structure of this api will be a combination of <code>send</code> with a <code>capital name (user -> User -> sendUser, userProfile -> UserProfile -> sendUserProfile)</code>, not the beginning of the interface you declared in
 				<code>interfaces/api/index.js</code>.
 				Default you can use <code>sendData</code>
 			</p>
 			<div class="position-relative code-container">
-				<pre class="language-javascript"><code class="language-javascript">//@iInterfaces/api/user.js
-
+				<pre class="language-javascript"><code class="language-javascript">//@iApp/http/controllers/api/user.controller.js
 module.exports = {
 	index: async (req, res, next) => {
 		try {
@@ -103,7 +102,7 @@ module.exports = {
 		}
 	}
 }
-		</code></pre>
+</code></pre>
 			</div>
 			<p class="text-content">
 				Structure of the received response
