@@ -1,0 +1,106 @@
+
+<section id="installation" class="page-body">
+	<p class="text-content">Job Queue</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			While building your web application, you may have some tasks, such as parsing and storing an uploaded CSV file, that
+			take too long to perform during a typical web request. Thankfully, BAMIMI allows you to easily create queued jobs that
+			may be processed in the background. By moving time intensive tasks to a queue, your application can respond to web
+			requests with blazing speed and provide a better user experience to your customers.
+		</p>
+		<p class="text-content">
+			BAMIMI Queue provides a unified queuing API on Redis.
+		</p>
+		<p class="text-content">
+			BAMIMI's queue configuration options are stored in your application's <code>configs/queue.js</code> configuration file. In this
+			you will find the connection configuration for the queue driver that ships with the Redis framework and also the
+			synchronous driver that will execute jobs immediately (for use in local development). An empty queue driver is also
+			included to remove queued jobs.
+		</p>
+
+		<h5 class="mb-4 mt-4"># Connection</h5>
+		<div>
+			<p class="text-content">
+				Before getting started with BAMIMI queues, it's important to understand the difference between "connections" and
+				"queues". In your <code>configs/queue.js</code> configuration file, there is an array of connection configurations. This option
+				identifies connections to the Redis backend queue service. However, any queue connection can have multiple "queues"
+				which can be thought of as different stacks or stacks of queued work.
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iApp/emails/startDemo.email.js
+const QueueManager = require("@iKernel/queue")()
+
+module.exports = (data) => {
+    const html = renderTemplate("demo.ejs");
+    
+    QueueManager.singleton().getQueue("emailQueue").add("sendMail", {
+        to: data.email,
+        subject: "Welcome to Bamimi land",
+        html: html
+    });
+};
+</code></pre>
+			</div>
+		</div>
+	</div>
+	<h2 class="mb-4 mt-4" id="introduction"># Work With Job</h2>
+	<div>
+		<p class="text-content">
+			By default, all of the queueable jobs for your application are stored in the <code>app/jobs</code> directory. If the <code>app/jobs</code>
+			directory doesn't exist, it will be created when you run the <code>job:generate</code> BAMIMI Cli command:
+		</p>
+		<div class="position-relative code-container" id="contentInstallNpm">
+				<button class="btn btn-primary copy-button" data-clipboard-text="npx @knfs-tech/bamimi-cli job:generate demo"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">//with npx
+npx @knfs-tech/bamimi-cli job:generate demo</code></pre>
+		</div>
+		<p class="text-content">
+			After running command line, the system immediately creates the following files:
+		</p>
+		<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iApp/jobs/demo.job.js
+"use strict";
+
+module.exports = {
+    name: "demoJob", // name of job
+    queue: "demoJob", // queue on which job will run
+	queueManager: "bullmq",
+    handle: async function (job) {}
+};
+</code></pre>
+			</div>
+		<p class="text-content">
+			Along with that, you need to go to file config of job and add the information of the job you want to run
+		</p>
+		<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iConfigs/config.js
+"use strict";
+
+module.exports = [
+    {
+        name: "demoJob",
+        func: require("@iApp/jobs/demo.job"),
+        onMain: false //To set true if you want to run it concurrently on main processing
+    },
+];
+</code></pre>
+			</div>
+		<p class="text-content">
+			If you choose <code>onMain</code>, the job will be worked on your main thread when you start the application
+		</p>
+		<p class="text-content">
+			Else you use command to run the job:
+		</p>
+		<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">$ bamimi-enjoy-&lt;projectName&gt;-dev job demoJob
+</code></pre>
+			</div>
+	</div>
+</section>

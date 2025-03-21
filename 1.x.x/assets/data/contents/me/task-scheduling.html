@@ -1,0 +1,81 @@
+<section id="installation" class="page-body">
+	<p class="text-content">Task Scheduling</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			Previously, you might have written a cron configuration entry for each task you needed to schedule on your server.
+			However, this can quickly become a pain because your task scheduler is no longer in source control and you have to SSH
+			into your server to see existing cron entries or add additional entries.
+			
+			BAMIMI's Command Scheduler provides a new approach to managing scheduled tasks on your server. The scheduler allows you
+			to define command schedules smoothly and clearly within your BAMIMI application itself. When using the scheduler, only a
+			single cron entry is required on your server. Your task schedule is typically defined in your application's
+			<code>routes/cli.js</code> file.
+		</p>
+
+	</div>
+	<h2 class="mb-4 mt-4" id="introduction"># Defining Schedules</h2>
+	<div>
+		<p class="text-content">
+			You can start a Schedules with the command
+		</p>
+		<div class="position-relative code-container" id="contentInstallNpm">
+				<button class="btn btn-primary copy-button" data-clipboard-text="npx @knfs-tech/bamimi-cli job:generate demo"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">//with npx
+npx @knfs-tech/bamimi-cli job:generate demo
+? Is it cron job (Y/n):
+
+</code></pre>
+		</div>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iApp/jobs/cronJob.job.js
+"use strict";
+
+module.exports = {
+    name: "demoJob",
+    queue: "demoJob",
+	queueManager: "bullmq",
+	schedules: [
+		{
+			name: "first-day-every-month",
+			time: {
+				pattern: "0 0 1 * *"
+			}, // cron schedule
+			prepare: { data: { email: "test@example.com" } },
+		},
+	],
+    handle: async function (job) {}
+};
+</code></pre>
+		</div>
+		<p class="text-content">
+			Like a normal job, you also need to declare it:
+		</p>
+		<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iConfigs/config.js
+"use strict";
+
+module.exports = [
+    {
+        name: "demoJob",
+        func: require("@iApp/jobs/demo.job"),
+        onMain: false //To set true if you want to run it concurrently on main processing
+    },
+];
+</code></pre>
+			</div>
+		<p class="text-content">
+			If you choose <code>onMain</code>, the job will be worked on your main thread when you start the application
+		</p>
+		<p class="text-content">
+			Else you use command to run the job:
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">$ bamimi-enjoy-&lt;projectName&gt;-dev job demoJob
+</code></pre>
+		</div>
+	</div>
+</section>

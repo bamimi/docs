@@ -1,0 +1,83 @@
+<section id="application-load-balancer" class="page-body">
+	<p class="text-content">Load Balancer</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			BAMIMI utilizes a simple Application Load Balancer (ALB) to distribute incoming requests across multiple
+			worker processes, improving application performance and scalability. This is particularly useful for
+			multi-core systems.
+		</p>
+
+		<p class="text-content">
+			The ALB is powered by the <a href="https://www.npmjs.com/package/@knfs-tech/alb">@knfs-tech/alb</a> package.
+		</p>
+	</div>
+
+	<h2 class="mb-4 mt-4" id="configuration"># Configuration</h2>
+	<div>
+		<p class="text-content">
+			ALB settings are configured through the <code>configs/app.js</code> file, specifically within the
+			<code>server</code> object.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iConfigs/app.js
+"use strict";
+require("dotenv").config();
+
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
+const serverConfig = {
+    host: process.env.APP_HOST || "localhost",
+    port: process.env.APP_PORT || process.env.PORT || 3000,
+    ssl: process.env.APP_SSL || false,
+    options: {
+        key: "",
+        cert: "",
+    },
+    useAlb: true, // Enable or disable ALB
+    alb: {
+        max: 4, // Maximum number of worker processes
+        min: 2, // Minimum number of worker processes
+        idleTime: 30000, // Maximum idle time (in milliseconds) for a worker before it is terminated
+        log: false // Enable or disable ALB logging
+    }
+};
+
+module.exports = {
+    name: process.env.APP_NAME || "BAMIMI",
+    debug: false,
+    server: serverConfig,
+    asset: process.env.APP_ASSET || `${serverConfig.host}:${serverConfig.port}`,
+    url: process.env.APP_URL || `${serverConfig.host}:${serverConfig.port}`,
+    useTableInformation: false,
+    timeZone: process.env.TIME_ZONE || "America/Los_Angeles",
+    staticCacheTime: 360000,
+};
+</code></pre>
+		</div>
+
+		<p class="text-content">
+			The following options are available:
+		</p>
+		<ul>
+			<li><code>useAlb</code>: Set to <code>true</code> to enable the ALB, <code>false</code> to disable it.</li>
+			<li><code>alb</code>: An object containing the ALB configuration:
+				<ul>
+					<li><code>max</code>: Maximum number of worker processes.</li>
+					<li><code>min</code>: Minimum number of worker processes.</li>
+					<li><code>idleTime</code>: Maximum idle time (in milliseconds) for a worker before it is terminated.
+					</li>
+					<li><code>log</code>: Enable or disable ALB logging.</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<h2 class="mb-4 mt-4" id="more-information"># More Information</h2>
+	<div>
+		<p class="text-content">
+			For more information on the <code>@knfs-tech/alb</code> package and its configuration options, please refer
+			to the <a href="https://www.npmjs.com/package/@knfs-tech/alb">official documentation</a>.
+		</p>
+	</div>
+</section>

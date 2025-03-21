@@ -1,0 +1,139 @@
+<section id="cache" class="page-body">
+	<p class="text-content">Caching</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			BAMIMI's Cache provides a flexible and efficient way to store and retrieve data, improving application
+			performance by reducing the need to repeatedly fetch data from slower data sources.
+		</p>
+
+		<p class="text-content">
+			The <code>@iKernel/cache</code> module returns a <b>function</b>. When you call this function, it returns a
+			cache instance based on the <code>CACHE_DRIVER</code> environment variable in your <code>.env</code> file
+			(or defaults to <code>local</code> if not set). This allows you to easily switch between different cache
+			drivers without modifying your code.
+		</p>
+
+		<p class="text-content">
+			You can also explicitly specify the cache driver by passing a parameter to the <code>@iKernel/cache</code>
+			function. This allows you to override the default cache driver defined in your <code>.env</code> file.
+		</p>
+	</div>
+
+	<h2 class="mb-4 mt-4" id="configuration"># Configuration</h2>
+	<div>
+		<p class="text-content">
+			Cache settings in BAMIMI are configured through the <code>configs/cache.js</code> file. This file allows you
+			to define which cache driver to use (local, redis, or memcached) and customize settings specific to each
+			driver.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iConfigs/cache.js
+"use strict";
+require("dotenv").config();
+
+const path = require("path");
+
+module.exports = {
+    use: process.env.CACHE_DRIVER || "local",  // Default cache driver
+    drivers: {
+        /**
+         * Bamimi cache configuration.
+         * Stores cached data locally on the server's disk.
+         * Learn more at:
+         * @link [https://www.npmjs.com/package/@knfs-tech/bamimi-cache]
+         */
+        local: {
+            folder: path.join(__dirname, '../../storage/cache'), // Directory for storing cache files
+            expire: 0, // Cache expiration time in seconds (0 means no expiration)
+            autoCompress: false, // Whether to compress cache files automatically
+            log: false, // Enable logging for cache operations
+            peakDuration: 2000, // Maximum duration for cache peak
+            maxSize: 0, // Maximum size for cache (0 means no size limit)
+        },
+        /**
+         * Redis cache configuration.
+         * Stores cached data using Redis.
+         * Learn more at:
+         * @link [https://www.npmjs.com/package/ioredis]
+         */
+        redis: {
+            host: process.env.REDIS_CACHE_HOST || "127.0.0.1", // Redis server host
+            port: Number(process.env.REDIS_CACHE_PORT) || 6379, // Redis server port
+            username: process.env.REDIS_CACHE_USER || null, // Redis username (if any)
+            password: process.env.REDIS_CACHE_PASS || null, // Redis password (if any)
+            db: process.env.REDIS_CACHE_DB || "0", // Redis database number
+            tls: process.env.REDIS_CACHE_TLS || null, // Redis TLS options (if any)
+        },
+        /**
+         * Memcached cache configuration.
+         * Stores cached data using Memcached.
+         * Learn more at:
+         * @link [https://www.npmjs.com/package/memcached]
+         */
+        memcached: {
+            host: process.env.MEMCACHED_CACHE_HOST || "127.0.0.1", // Memcached server host
+            port: Number(process.env.MEMCACHED_CACHE_PORT) || 11211, // Memcached server port
+            options: {
+                poolSize: 10, // The number of connections to the Memcached server
+                retries: 3, // Number of retries in case of failure
+                retry: 5000, // Time (in ms) between retries
+                remove: true, // Whether to remove expired cache items automatically
+                timeout: 5000, // Timeout (in ms) for each cache operation
+                idle: 10000, // Time (in ms) for idle connections to stay open
+            },
+        },
+    }
+};
+</code></pre>
+		</div>
+	</div>
+
+	<h2 class="mb-4 mt-4" id="usage"># Usage</h2>
+	<div>
+		<p class="text-content">
+			This section describes how to use the Cache functions provided by BAMIMI. First, you need to get a cache
+			instance by calling the <b>function</b> returned by <code>@iKernel/cache</code>:
+		</p>
+
+		<h3 class="mb-4 mt-4" id="getting-cache-instance"># Getting a Cache Instance</h3>
+		<p class="text-content">
+			You can get a cache instance in two ways:
+		</p>
+
+		<h4 class="mb-4 mt-4" id="default-driver"># Default Driver</h4>
+		<p class="text-content">
+			If you don't specify a driver, <code>@iKernel/cache()</code> will use the driver defined in your
+			<code>.env</code> file (<code>CACHE_DRIVER</code>) or default to <code>local</code> if the environment
+			variable is not set.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const cache = require("@iKernel/cache")().singleton; // Get the singleton cache instance using the default driver
+</code></pre>
+		</div>
+
+		<h4 class="mb-4 mt-4" id="specifying-driver"># Specifying a Driver</h4>
+		<p class="text-content">
+			You can explicitly specify the cache driver by passing the driver name as a parameter to the
+			<code>@iKernel/cache()</code> function.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const cache = require("@iKernel/cache")('redis').singleton; // Get the singleton Redis cache instance
+const cache = require("@iKernel/cache")('memcached').new; // Get a new Memcached cache instance
+</code></pre>
+		</div>
+
+		<h3 class="mb-4 mt-4" id="more-information"># More Information</h3>
+		<p class="text-content">
+			For more information on how to use the cache drivers, please refer to the following documentation:
+		</p>
+		<ul>
+			<li><a href="https://www.npmjs.com/package/@knfs-tech/bamimi-cache">@knfs-tech/bamimi-cache</a> (Local
+				Cache)</li>
+			<li><a href="https://www.npmjs.com/package/ioredis">ioredis</a> (Redis Cache)</li>
+			<li><a href="https://www.npmjs.com/package/memcached">memcached</a> (Memcached Cache)</li>
+		</ul>
+	</div>
+</section>

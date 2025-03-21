@@ -1,0 +1,160 @@
+
+<section id="installation" class="page-body">
+	<p class="text-content">Interfaces</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			BAMIMI understands the importance of the system's interface when communicating from the outside, so Bamimi provide
+			WebUI, API and CLI
+		</p>
+	</div>
+	<h2 class="mb-4 mt-4" id="introduction"># Writing Interfaces</h2>
+	<div>
+		<h5 class="mb-4 mt-4"># WebUI - Web User Interface</h5>
+		<div>
+			<p class="text-content">
+				BAMIMI is integrating <code>EJS Engine</code> to handle UI-related issues, specifically you can find the ejs interface code at
+				<code>interfaces/web</code> directory, and use it via <code>res.view</code> api
+			</p>
+			<div class="position-relative code-container">
+<pre class="language-javascript"><code class="language-javascript">//@iApp/controllers/web/demo.controller.js
+"use strict";
+
+module.exports = {
+    index: async function (req, res, next) {
+        try {
+            return await res.view({
+                view: "pages/home",  // page in @iInterfaces/web/pages/
+					data: {  // data transmitted to the interface
+                    	version: "1.0.0"
+                	}
+            });
+        } catch (error) {
+            next(error)
+        }
+    }
+};
+</code></pre>
+			</div>
+			<p class="text-content">
+				You can also customize the interface parameters if you want in the file <code>kernel/response/web.res.js</code>, you can create new api for your WebUI, customize or overwrite api <code>res.view</code>
+			</p>
+		</div>
+
+		<h5 class="mb-4 mt-4"># API - Application Programming Interface</h5>
+		<div>
+			<p class="text-content">
+				BAMIMI gives you a clear structure for the responses returned from integrating external applications into your
+				application. 
+				These structures will define standard response states so you can easily handle them. 
+				You can start with <code>itf:generate</code> command
+			</p>
+			<div class="position-relative code-container" id="contentInstallNpm">
+				<button class="btn btn-primary copy-button" data-clipboard-text="npx @knfs-tech/bamimi-cli itf:generate user"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">//with npx
+npx @knfs-tech/bamimi-cli itf:generate user</code></pre>
+			</div>
+			<div class="position-relative code-container">
+				<pre class="language-javascript"><code class="language-javascript">//@iInterfaces/api/user.js
+"use strict";
+		
+module.exports = (data) => {
+	return data // customize response if you want
+};
+		</code></pre>
+			</div>
+			<p class="text-content">
+				You will then need to declare if you want to use that interface in <code>interfaces/api/index.js</code>
+			</p>
+			<div class="position-relative code-container">
+				<pre class="language-javascript"><code class="language-javascript">//@iInterfaces/api/user.js
+/**
+* Set interface you want to use
+*/
+module.exports = {
+	user: {
+		key: "userData", //representative field displayed at response
+		dto: require("./user") //format data
+	}
+}
+		</code></pre>
+			</div>
+			<p class="text-content">
+				Then in the controller you will apply the declared interface. 
+				The structure of this api will be a combination of <code>send</code> with a <code>capital name (user -> User -> sendUser, userProfile -> UserProfile -> sendUserProfile)</code>, not the beginning of the interface you declared in
+				<code>interfaces/api/index.js</code>.
+				The default you can use <code>sendData</code>
+			</p>
+			<div class="position-relative code-container">
+				<pre class="language-javascript"><code class="language-javascript">//@iApp/http/controllers/api/user.controller.js
+module.exports = {
+	index: async (req, res, next) => {
+		try {
+			const user = {
+				id: 1,
+				name: "demo name"
+			}
+			res.status(200).sendUser(user) // or use res.status(200).sendData({userData: user})
+		} catch(error) {
+			next(error)
+		}
+	}
+}
+</code></pre>
+			</div>
+			<p class="text-content">
+				Structure of the received response
+			</p>
+			<div class="position-relative code-container">
+				<pre class="language-javascript"><code class="language-javascript">{
+	"meta": {
+		"content": "OK",
+		"code": 200
+	},
+	"data": {
+		"userData": {
+			"id": 1,
+			"name": "demo name"
+		}
+	}
+}
+</code></pre>
+			</div>
+		</div>
+
+		<h5 class="mb-4 mt-4"># CLI - Command-Line Interface</h5>
+		<div>
+			<p class="text-content">
+				BAMIMI is integrating <code>Commander</code> to handle Cli issues, you can run it by:
+			</p>
+			<div class="position-relative code-container">
+				<pre class="language-javascript"><code class="language-javascript">$ npm link .
+$ bamimi-enjoy-&lt;projectName&gt;-dev // for dev
+$ bamimi-enjoy-&lt;projectName&gt; // for build version
+</code></pre>
+			</div>
+			<p class="text-content">
+				Initiate a new command line at <code>app/commands</code> and apply it at <code>routes/cli/index.js</code>
+			</p>
+			<div class="position-relative code-container">
+				<pre class="language-javascript"><code class="language-javascript">//@iRoutes/cli/index.js
+#!/usr/bin/env node
+const { Command } = require("commander");
+const program = new Command();
+
+...// exist command line
+const newCommand = require("@iApp/commands/newCommand.cli.js") // command line is created
+
+program
+	.addCommand(jobCommand)
+	.addCommand(newCommand)
+
+program.parse(process.argv);
+</code></pre>
+			</div>
+			<a href="https://www.npmjs.com/package/commander" target="_blank">More</a>
+		</div>
+	</div>
+</section>

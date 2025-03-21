@@ -1,0 +1,49 @@
+<section class="page-body">
+	<p class="text-content">Database</p>
+	<h2 class="mb-4"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			Almost every modern web application interacts with a database. BAMIMI interact Sequelize to support SQL database issues.
+			So you can research deeply at <a href="https://sequelize.org/">Sequelize</a>, in BAMIMI Document, we only guide how BAMIMI applies Sequelize inside
+		</p>
+		<p>
+			Additionally, MongoDB is supported via the <a href="https://mongoosejs.com/">Mongoose</a> package, which is officially maintained by MongoDB.
+		</p>
+
+		<h5 class="mb-4 mt-4"># Configuration</h5>
+		<div>
+			<p class="text-content">
+				The configuration for BAMIMI's database services is located in your application's <code>configs/database.js</code> configuration
+				file. In this file, you may define all of your database connections, as well as specify which connection should be used
+				by default. Most of the configuration options within this file are driven by the values of your application's
+				environment variables. Examples for most of BAMIMI's supported database systems are provided in this file.
+			</p>
+			<p class="text-content">
+				By default, which is a Docker configuration for developing BAMIMI applications on your local machine. However, you are free to modify your database
+				configuration as needed for your local database.
+			</p>
+		</div>
+		<h5 class="mb-4 mt-4"># Init</h5>
+		<div>
+			<p class="text-content">
+				BAMIMI is managing centrally in <code>kernel/database</code> with function <code>getDB</code>, 
+				we suggest that you should want to use through in <code>kernel</code> for management instance and you database easily
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iApp/ORMs/User.js
+const db = require("@iKernel/database").get();
+</code></pre>
+			</div>
+			<p class="text-content">
+				Another way, you can select the database which you want by transfer name of database type:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript"
+				tabindex="0"><code class="language-javascript">//@iApp/ORMs/User.js
+const db = require("@iKernel/database").get({ useDatabase: 'sql' });
+</code></pre>
+			</div>
+		</div>
+	</div>
+</section>

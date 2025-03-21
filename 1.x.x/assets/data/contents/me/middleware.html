@@ -1,0 +1,124 @@
+
+<section id="installation" class="page-body">
+	<p class="text-content">Middleware</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			Middleware provide a convenient mechanism for inspecting and filtering HTTP requests entering your application. For
+			example, BAMIMI includes a middleware that verifies the user of your application is authenticated. If the user is not
+			authenticated, the middleware will redirect the user to your application's login screen. However, if the user is
+			authenticated, the middleware will allow the request to proceed further into the application.
+			
+			Additional middleware can be written to perform a variety of tasks besides authentication. For example, a logging
+			middleware might log all incoming requests to your application. A variety of middleware are included in BAMIMI,
+			including middleware for authentication and CSRF protection; however, all user-defined middleware are typically located
+			in your application's <code>app/http/middleware</code> directory.
+		</p>
+	</div>
+	<h2 class="mb-4 mt-4" id="introduction"># Defining Middleware</h2>
+	<div>
+		<p class="text-content">
+			To create a new middleware, use the <code>middleware:generate</code> command:
+		</p>
+		<div class="position-relative code-container">
+				<button class="btn btn-primary copy-button" data-clipboard-text="npx @knfs-tech/bamimi-cli@latest middleware:generate newMiddleware"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">//with npx
+npx @knfs-tech/bamimi-cli@latest middleware:generate newMiddleware</code></pre>
+		</div>
+		<p class="text-content">
+			This command will place a new <code>newMiddleware</code> within your <code>app/http/middleware</code> directory. In this middleware, we
+			will only allow access to the route if the supplied token input matches a specified value. Otherwise, we will redirect
+			the users back to the <code>/home</code> URI:
+		</p>
+		<div class="position-relative code-container">
+				<button class="btn btn-primary copy-button" data-clipboard-text="modules.export = (req, res, next) => {
+
+	if (req.body.token !== 'secret-token') {
+		return res.redirect('/home');
+	}
+
+	next();
+}"><i
+						class="fas fa-copy"></i></button>
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">// @iApp/http/middleware/newMiddleware.mid.js
+"use strict";
+
+modules.export = (req, res, next) => {
+
+	if (req.query.token !== 'secret-token') {
+		return res.redirect('/home');
+	}
+
+	next();
+}
+
+</code></pre>
+		</div>
+		<p class="text-content">
+			As you can see, if the given token does not match our secret token, the middleware will return an HTTP redirect to the
+			client; otherwise, the request will be passed further into the application. To pass the request deeper into the
+			application (allowing the middleware to "pass"), you should call next.
+			
+			It's best to envision middleware as a series of "layers" HTTP requests must pass through before they hit your
+			application. Each layer can examine the request and even reject it entirely.
+		</p>
+		<a href="https://expressjs.com/en/guide/using-middleware.html">More Detail</a>
+	</div>
+
+	<h2 class="mb-4 mt-4" id="introduction"># Registering Middleware</h2>
+	<div>
+		<h5 class="mb-4 mt-4"># Global Middleware</h5>
+		<div>
+			<p class="text-content">
+				If you want a middleware to run during every HTTP request to your application, you may append it to the global
+				middleware stack in your application's <code>kernel/index.js</code> file:
+			</p>
+				<div class="position-relative code-container">
+				<pre class="language-javascript"
+					tabindex="0"><code class="language-javascript">// @iKernel/index.js
+"use strict";
+
+exports.middleware = {
+	common: {
+		before: [
+			... // list global middleware for common
+		],
+		after: [
+			... // list global middleware for common
+		]
+	},
+	api: [
+		... // list global middleware for api
+	],
+	web: [
+		... // list global middleware for web
+	],
+	...
+}
+</code></pre>
+		</div>
+		</div>
+		<h5 class="mb-4 mt-4"># Assigning Middleware to Routes</h5>
+		<div>
+			<p class="text-content">
+				If you would like to assign middleware to specific routes, you may apply it in the method call to routes:
+			</p>
+			<div class="position-relative code-container mt-4">
+				<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iRoutes/web/index.js
+"use strict";
+const router = require("express").
+const newMiddleware = require("@iApp/http/middleware/newMiddleware.mid")
+
+router.get(
+	'/demo', 
+	newMiddleware,
+	require("@iApp/http/controllers/web/demo").index
+);
+			</code></pre>
+			</div>
+		</div>
+	</div>
+</section>

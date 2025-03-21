@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BAMIMI - Documentation</title>
+	<link rel="icon" type="image/x-icon" href="/assets/img/bamimi-logo.png">
+	<meta name="title" content="BAMIMI - Documentation">
+	<meta name="description"
+		content="BAMIMI is a Node.js web application framework with a simple, efficient, easy-to-understand syntax. We've set everything up so you can focus on being creative without worrying about the small details.">
+	<meta http-equiv="Content-Language" content="en">
+	<meta name="keywords"
+		content="Node.js, framework Node.js, documentation Node.js, guide Node.js, develop with Node.js, Node.js tutorial, BAMIMI, Web technology, Vietnamese technology">
+	<meta property="og:url" content="https://bamimi.github.io/">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="BAMIMI - Documentation">
+	<meta property="og:description"
+		content="BAMIMI is a Node.js web application framework with a simple, efficient, easy-to-understand syntax. We've set everything up so you can focus on being creative without worrying about the small details.">
+	<meta property="og:image" content="https://bamimi.github.io/assets/img/bamimi-logo-text.png">
+	
+	<meta property="twitter:title" content="BAMIMI - Documentation">
+	<meta property="twitter:description"
+		content="BAMIMI is a Node.js web application framework with a simple, efficient, easy-to-understand syntax. We've set everything up so you can focus on being creative without worrying about the small details">
+	<meta property="twitter:image" content="https://bamimi.github.io/assets/img/bamimi-logo-text.png">
+	<meta property="twitter:card" content="summary_large_image">
+
+	<base href="/docs/1.x.x"/>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link href="/docs/assets/css/common.css" rel="stylesheet">
+	<link href="/docs/1.x.x/assets/css/styles.css" rel="stylesheet">
+	<!-- <link href="/assets/css/common.css" rel="stylesheet">
+		<link href="assets/css/styles.css" rel="stylesheet"> -->
+</head>
+
+<body>
+	<section class="container-fluid">
+		<div class="row">
+			<div class="col-lg-3 col-md-4 col-sm-12 sidebar">
+				<div class="sidebar-header">
+					<div>
+						<a class="knfs-logo" href="https://bamimi.github.io" title="BAMIMI" rel="nofollow noopener">
+							<img src="/assets/img/bamimi-logo.png" alt="Logo" class="logo">
+						</a>
+					</div>
+					<div class="select-bar">
+						<i class="bi bi-list" id="openSideBarContent"></i>
+						<i class="bi bi-x-lg" id="closeSideBarContent"></i>
+					</div>
+				</div>
+				<div class="sidebar-content" id="sidebarContent">
+					<div id="search" class="mb-3">
+						<input type="text" class="type" id="searchInput" placeholder="Search" />
+						<i class="bi bi-x-lg" id="clearSearch"></i>
+					</div>
+					<ul class="sidebar-content-parrent" id="sidebarContentElement">
+						<li>
+							<span class="side-parent">
+								Preface
+							</span>
+							<ul class="sidebar-content-child">
+								<li class="select-content" data-content="pr_introduction">
+									Introduction
+								</li>
+							</ul>
+						</li>
+						<li>
+							<span class="side-parent">
+							Getting Started</span>
+							<ul class="sidebar-content-child">
+								<li class="select-content" data-content="gs_installation">
+									Installation
+								</li>
+								<li class="select-content" data-content="gs_directory-structure">
+									Directory Structure <span class="flag-menu update">Update</span>
+								</li>
+								<li class="select-content" data-content="gs_deployment">Deployment <span class="flag-menu update">Update</span></li>
+							</ul>
+						</li>
+						<li>
+							<span class="side-parent">Architecture</span>
+							<ul class="sidebar-content-child">
+								<li class="select-content" data-content="ar_request-lifecycle">Request Lifecycle</li>
+								<li class="select-content" data-content="ar_kernel">Kernel <span class="flag-menu update">Update</span></li>
+								<li class="select-content" data-content="ar_load-balancer">Load Balancer <span class="flag-menu new">New</span></li>
+							</ul>
+						</li>
+						<li>
+							<span class="side-parent">Main Elements</span>
+							<ul class="sidebar-content-child">
+								<li class="select-content" data-content="me_routing">Routing</li>
+								<li class="select-content" data-content="me_middleware">Middleware</li>
+								<li class="select-content" data-content="me_csrf">CSRF</li>
+								<li class="select-content" data-content="me_controller">Controllers</li>
+								<li class="select-content" data-content="me_interfaces">Interfaces</li>
+								<li class="select-content" data-content="me_validation">Validation</li>
+								<li class="select-content" data-content="me_authentication">Authentication</li>
+								<li class="select-content" data-content="me_security">Security</li>
+								<li class="select-content" data-content="me_job-queue">Job Queue<span class="flag-menu update">Update</span></li>
+								<li class="select-content" data-content="me_task-scheduling">Task Scheduling<span class="flag-menu update">Update</span></li>
+								<li class="select-content" data-content="me_mail">Mail<span class="flag-menu new">New</span></li>
+								<li class="select-content" data-content="me_caching">Caching<span class="flag-menu new">New</span></li>
+								<li class="select-content" data-content="me_file-storage">File Storage<span class="flag-menu new">New</span></li>
+								<li class="select-content" data-content="me_database">Database</li>
+								<li class="select-content" data-content="me_socket">Socket.io</li>
+								<li class="select-content" data-content="me_utils">Utils</li>
+							</ul>
+						</li>
+						<li> 
+							<span class="side-parent">Extend</span>
+							<ul class="sidebar-content-child">
+								<li class="select-content" data-content="ext_module">Module</li>
+							</ul>
+						</li>
+						<li> 
+							<span class="side-parent">Packages</span>
+							<ul class="sidebar-content-child">
+								<li><a href="https://expressjs.com/">Express.js</a></li>
+								<li><a href="https://www.npmjs.com/package/@knfs-tech/bamimi-auth">@knfs-tech/bamimi-auth</a></li>
+								<li><a href="https://www.npmjs.com/package/@knfs-tech/bamimi-socket.io">@knfs-tech/bamimi-socket.io</a></li>
+								<li><a href="https://www.npmjs.com/package/@knfs-tech/bamimi-cache">@knfs-tech/bamimi-cache</a></li>
+								<li><a href="https://www.npmjs.com/package/@knfs-tech/alb">@knfs-tech/alb</a></li>
+								<li><a href="https://www.npmjs.com/package/@knfs-tech/csrf">@knfs-tech/csrf</a></li>
+								<li><a href="https://sequelize.org/">Sequelize</a></li>
+								<li><a href="https://mongoosejs.com/">Mongoose</a></li>
+								<li><a href="https://ejs.co/">EJS</a></li>
+								<li><a href="https://www.npmjs.com/package/ioredis">IoRedis</a></li>
+								<li><a href="https://docs.bullmq.io/">BullMQ</a></li>
+								<li><a href="https://www.nodemailer.com/about/">Nodemailer</a></li>
+								<li><a href="https://helmetjs.github.io/">Helmet.js</a></li>
+								<li><a href="https://www.npmjs.com/package/xss">Xss</a></li>
+								<li><a href="https://socket.io/">Socket.io</a></li>
+								<li><a href="https://www.npmjs.com/package/commander">Commander</a></li>
+								<li><a href="https://jestjs.io/">Jest</a></li>
+								<li><a href="https://eslint.org/">Eslint</a></li>
+								<li><a href="https://babeljs.io/">Babel</a></li>
+								<li><a href="https://www.npmjs.com/package/bcrypt">bcrypt</a></li>
+								<li><a href="https://www.npmjs.com/package/body-parser">body-parser</a></li>
+								<li><a href="https://www.npmjs.com/package/cookie-parser">cookie-parser</a></li>
+								<li><a href="https://nodejs.org/api/crypto.html">crypto</a></li>
+								<li><a href="https://www.npmjs.com/package/express-flash">express-flash</a></li>
+								<li><a href="https://www.npmjs.com/package/express-session">express-session</a></li>
+								<li><a href="https://www.npmjs.com/package/express-validator">express-validator</a></li>
+								<li><a href="https://www.npmjs.com/package/fs-extra">fs-extra</a></li>
+								<li><a href="https://www.npmjs.com/package/method-override">method-override</a></li>
+								<li><a href="https://www.npmjs.com/package/morgan">morgan</a></li>
+								<li><a href="https://www.npmjs.com/package/multer">multer</a></li>
+								<li><a href="https://www.npmjs.com/package/winston">winston</a></li>
+							</ul>
+
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-lg-9 col-md-8 col-sm-12 main-content">
+				<div id="content">
+					<div id="spinner" class="spinner"></div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<footer>
+		<p>&copy; 2024 KNFs,.jsc - <span class="bami">BAMI</span><span class="mi">MI</span> - MIT License</p>
+	</footer>
+	<!-- Scripts -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+	<script src="/docs/assets/js/get-data.js"></script>
+	<script src="/docs/1.x.x/assets/js/script.js"></script>
+	<!-- <script src="/assets/js/get-data.js"></script>
+	<script src="assets/js/script.js"></script> -->
+</body>
+
+</html>

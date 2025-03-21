@@ -1,0 +1,344 @@
+<section id="installation" class="page-body">
+	<p class="text-content">File Storage</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			BAMIMI's File Storage provides a powerful, flexible, and easy-to-use file management solution. This
+			kernel allows you to seamlessly manage files across various platforms, from local storage to cloud services
+			(S3, Blob,
+			GCStorage). The provided functions, including <code>upload</code>, <code>save</code>, <code>remove</code>,
+			<code>copy</code>, <code>getUrl</code>, and <code>getContent</code>, ensure simplified
+			and efficient file operations. This system supports switching file storage configurations easily.
+		</p>
+
+		<p class="text-content">
+			The <code>@iKernel/file</code> module returns a function that, when called, returns the storage object based
+			on the <code>STORAGE</code> environment variable in your <code>.env</code> file (or defaults to
+			<code>local</code> if not set). This allows you to easily switch between different storage solutions without
+			modifying your code.
+		</p>
+
+		<p class="text-content">
+			You can also explicitly specify the storage driver by passing a parameter to the <code>@iKernel/file</code>
+			function. This allows you to override the default storage driver defined in your <code>.env</code> file.
+		</p>
+
+	</div>
+
+	<h2 class="mb-4 mt-4" id="configuration"># Configuration</h2>
+	<div>
+		<p class="text-content">
+			File Storage in BAMIMI is designed for flexibility, allowing you to configure storage settings through the
+			<code>configs/file.js</code> configuration file. This file lets you define which storage driver to use
+			(local, s3, blob, or
+			gcStorage) and customize settings specific to each driver. This configuration file contains:
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iConfigs/file.js
+"use strict";
+require("dotenv").config();
+const path = require("path");
+const url = require("@iUtils/url");
+
+/**
+ * Local Storage Configuration
+ * Local file storage configuration for managing uploads and serving public files.
+ */
+const local = {
+    url: url("public/storage"), // Public URL for accessing stored files
+    folder: path.join(__dirname, "./../../storage/upload"), // Path where uploaded files are stored
+    publicFolder: path.join(__dirname, "./../../storage/public"), // Path where public files are stored
+    defaultPublicExpire: 60, // Default expiration for public files (1 minute)
+}
+
+/**
+ * Amazon S3 Storage Configuration
+ * Configuration for using Amazon S3 for file uploads and public access.
+ * Learn more at:
+ * @link https://aws.amazon.com/s3/
+ */
+const s3 = {
+    url: process.env.AWS_CDN_URL || '', // URL to access files publicly from S3 (CDN URL)
+    bucket: process.env.AWS_BUCKET_NAME, // Name of the S3 bucket
+    region: process.env.AWS_REGION || 'us-east-1', // AWS region for S3 bucket
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID, // AWS Access Key ID for S3
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // AWS Secret Access Key for S3
+    defaultPublicExpire: 60, // Default expiration for public files (1 minute)
+}
+
+/**
+ * Azure Blob Storage Configuration
+ * Configuration for using Azure Blob Storage for file uploads and public access.
+ * Learn more at:
+ * @link https://azure.microsoft.com/en-us/services/storage/blobs/
+ */
+const blob = {
+    url: process.env.AZURE_CDN_URL || "", // URL to access files publicly from Azure Blob Storage
+    defaultEndpointsProtocol: process.env.AZURE_DEFAULT_ENDPOINTS_PROTOCOL ?? "https", // Protocol for Azure endpoints (usually "https")
+    accountName: process.env.AZURE_ACCOUNT_NAME, // Azure account name for Blob storage
+    accountKey: process.env.AZURE_ACCOUNT_KEY, // Azure account key for Blob storage
+    endpointSuffix: process.env.AZURE_ENDPOINT_SUFFIX ?? "core.windows.net", // Suffix for Azure endpoints (default is "core.windows.net")
+    containerName: process.env.AZURE_BLOB_CONTAINER_NAME ?? 'nvt', // Name of the Azure Blob container
+    defaultPublicExpire: 60, // Default expiration for public files (1 minute)
+}
+
+/**
+ * Google Cloud Storage Configuration
+ * Configuration for using Google Cloud Storage for file uploads and public access.
+ * Learn more at:
+ * @link https://cloud.google.com/storage
+ */
+const gcStorage = {
+    url: process.env.GCP_CDN_URL || "", // URL to access files publicly from Google Cloud Storage
+    projectId: process.env.GCP_PROJECT_ID, // Google Cloud project ID
+    bucket: process.env.GCP_BUCKET, // Name of the Google Cloud bucket
+    keyFilename: process.env.GCP_KEY_FILE, // Path to the GCP service account key file
+    defaultPublicExpire: 60, // Default expiration for public files (1 minute)
+}
+
+/**
+ * Module Exports
+ * The configuration module exports the storage settings and default limits used for file uploads.
+ */
+module.exports = {
+    use: process.env.STORAGE || "local", // Storage option to use (can be "local", "s3", "blob", or "gcStorage")
+    defaultLimits: {
+        fileSize: 1024 * 1024  // Maximum file size for uploads (1MB)
+    },
+    storages: {
+        local, // Local storage configuration
+        s3, // S3 storage configuration
+        blob: {
+            ...blob,
+            connectString:
+                `DefaultEndpointsProtocol=${blob.defaultEndpointsProtocol};AccountName=${blob.accountName};AccountKey=${blob.accountKey};EndpointSuffix=${blob.endpointSuffix}`, // Azure connection string for Blob storage
+        },
+        gcStorage, // Google Cloud Storage configuration
+    }
+};
+
+
+</code></pre>
+		</div>
+	</div>
+</section>
+
+<section id="usage" class="page-body">
+	<h2 class="mb-4 mt-4" id="usage"># Usage</h2>
+	<div>
+		<p class="text-content">
+			This section describes how to use the File Storage functions provided by BAMIMI. First, you need to get the
+			storage object by calling the <code>@iKernel/file</code> function:
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const storage = require("@iKernel/file")(); // Get the storage object using the default driver
+</code></pre>
+		</div>
+
+		<p class="text-content">
+			You can also specify the storage driver:
+		</p>
+
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const storage = require("@iKernel/file")('s3'); // Get the S3 storage object
+</code></pre>
+		</div>
+
+		<p class="text-content">
+			Now you can use the functions provided by the storage object.
+		</p>
+
+		<h4 class="mb-4 mt-4" id="upload"># Uploading Files</h4>
+		<p class="text-content">
+			The <code>upload</code> function is used to upload files from the client to the storage. It leverages <a
+				href="https://github.com/multer/multer">Multer</a> middleware for handling file uploads.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const storage = require("@iKernel/file")();
+const { upload } = storage; // Get the upload function
+
+// Example usage in a route handler
+app.post('/upload', upload().single('file'), (req, res) => {
+  // req.file contains information about the uploaded file
+  // req.body contains the text fields if there were any
+  res.json({ message: 'File uploaded successfully', file: req.file });
+});
+</code></pre>
+		</div>
+		<p class="text-content">
+			The <code>upload()</code> function accepts an optional object with configuration options:
+		</p>
+		<ul>
+			<li><code>filename</code>: A function to determine the name of the uploaded file. Default:
+				<code>setFilename</code> from <code>support.js</code>.</li>
+			<li><code>limits</code>: An object specifying size limits for the uploaded file. Default:
+				<code>defaultLimits</code> from <code>configs/file.js</code>.</li>
+			<li><code>fileFilter</code>: A function to control which files are accepted. Default:
+				<code>fileFilter</code> from <code>support.js</code> (accepts all files).</li>
+		</ul>
+
+		<h4 class="mb-4 mt-4" id="save"># Saving Files</h4>
+		<p class="text-content">
+			The <code>save</code> function is used to save a file to the storage. This is useful when you already have
+			the file data in memory (e.g., from a buffer).
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const storage = require("@iKernel/file")();
+const { save } = storage; // Get the save function
+const fs = require('fs');
+
+// Example usage
+const filePath = '/path/to/your/file.txt';
+fs.readFile(filePath, async (err, data) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+
+  try {
+    await save({ buffer: data }, 'destination/file.txt');
+    console.log('File saved successfully!');
+  } catch (error) {
+    console.error('Error saving file:', error);
+  }
+});
+</code></pre>
+		</div>
+		<p class="text-content">
+			The <code>save</code> function accepts two parameters:
+		</p>
+		<ul>
+			<li><code>file</code>: An object containing the file data. It must have a <code>buffer</code> property
+				containing the file's content as a Buffer.</li>
+			<li><code>destFile</code>: The destination path for the file in the storage.</li>
+		</ul>
+
+		<h4 class="mb-4 mt-4" id="remove"># Removing Files</h4>
+		<p class="text-content">
+			The <code>remove</code> function is used to delete a file from the storage.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const storage = require("@iKernel/file")();
+const { remove } = storage; // Get the remove function
+
+// Example usage
+async function deleteFile(filename) {
+  try {
+    await remove(filename);
+    console.log('File deleted successfully');
+  } catch (error) {
+    console.error('Error deleting file:', error);
+  }
+}
+
+deleteFile('file-to-delete.txt');
+</code></pre>
+		</div>
+		<p class="text-content">
+			The <code>remove</code> function accepts one parameter:
+		</p>
+		<ul>
+			<li><code>sourceFile</code>: The path to the file to be deleted.</li>
+		</ul>
+
+		<h4 class="mb-4 mt-4" id="copy"># Copying Files</h4>
+		<p class="text-content">
+			The <code>copy</code> function is used to copy a file from one location to another within the storage.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const storage = require("@iKernel/file")();
+const { copy } = storage; // Get the copy function
+
+// Example usage
+async function copyFile(source, destination) {
+  try {
+    await copy(source, destination);
+    console.log('File copied successfully');
+  } catch (error) {
+    console.error('Error copying file:', error);
+  }
+}
+
+copyFile('source/file.txt', 'destination/file.txt');
+</code></pre>
+		</div>
+		<p class="text-content">
+			The <code>copy</code> function accepts two parameters:
+		</p>
+		<ul>
+			<li><code>sourceFile</code>: The path to the source file.</li>
+			<li><code>destFile</code>: The path to the destination file.</li>
+		</ul>
+
+		<h4 class="mb-4 mt-4" id="getUrl"># Getting File URLs</h4>
+		<p class="text-content">
+			The <code>getUrl</code> function is used to retrieve a URL for accessing a file. For local storage, this
+			function copies the file to a public directory and returns a URL with a limited expiration time.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const storage = require("@iKernel/file")();
+const { getUrl } = storage; // Get the getUrl function
+
+// Example usage
+async function getFileUrl(filename) {
+  try {
+    const url = await getUrl(filename);
+    console.log('File URL:', url);
+  } catch (error) {
+    console.error('Error getting file URL:', error);
+  }
+}
+
+getFileUrl('file.txt');
+</code></pre>
+		</div>
+		<p class="text-content">
+			The <code>getUrl</code> function accepts two parameters:
+		</p>
+		<ul>
+			<li><code>sourceFile</code>: The path to the file.</li>
+			<li><code>options</code> (optional): An object with options.
+				<ul>
+					<li><code>expire</code>: The expiration time in seconds for the URL. Default:
+						<code>defaultPublicExpire</code> from <code>configs/file.js</code>.</li>
+				</ul>
+			</li>
+		</ul>
+
+		<h4 class="mb-4 mt-4" id="getContent"># Getting File Content</h4>
+		<p class="text-content">
+			The <code>getContent</code> function is used to retrieve the content of a file.
+		</p>
+		<div class="position-relative code-container mt-4">
+			<pre class="language-javascript" tabindex="0"><code class="language-javascript">
+const storage = require("@iKernel/file")();
+const { getContent } = storage; // Get the getContent function
+
+// Example usage
+async function getFileContent(filename) {
+  try {
+    const content = await getContent(filename);
+    console.log('File Content:', content);
+  } catch (error) {
+    console.error('Error getting file content:', error);
+  }
+}
+
+getFileContent('file.txt');
+</code></pre>
+		</div>
+		<p class="text-content">
+			The <code>getContent</code> function accepts one parameter:
+		</p>
+		<ul>
+			<li><code>sourceFile</code>: The path to the file.</li>
+		</ul>
+	</div>
+</section>

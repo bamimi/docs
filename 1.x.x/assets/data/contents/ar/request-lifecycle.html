@@ -1,0 +1,57 @@
+<section id="installation" class="page-body">
+	<p class="text-content">Request Lifecycle</p>
+	<h2 class="mb-4 mt-4" id="introduction"># Introduction</h2>
+	<div>
+		<p class="text-content">
+			When using any tool in the real world, you naturally feel more confident when you understand how it works.
+			Application
+			development is no different. Gaining insight into how your development tools operate can make working with them more
+			intuitive and efficient.
+		
+			The goal of this document is to provide you with a high-level overview of how the BAMIMI framework functions. By
+			familiarizing yourself with the framework, everything will feel less "magical," and you'll build your applications
+			with
+			greater confidence. Don't worry if you don't fully understand all the terms right away! Focus on grasping the key
+			concepts, and your understanding will deepen as you explore other sections of the documentation.
+		</p>
+	</div>
+	<h2 class="mb-4 mt-4" id="overview"># Overview</h2>
+	<div>
+		<img src="/docs/1.x.x/assets/img/bamimi-architecture.webp" alt="Architecture" id="architectureImage">
+		<h5 class="mb-4 mt-4"># HTTP Request</h5>
+		<div>
+			<p class="text-content">
+				The entry point for all http requests to a BAMIMI application is the <code>server.js</code> file. All requests are directed to this file
+				by your web server (Apache/Nginx) configuration. The <code>server.js</code> file doesn't contain much code. Rather, it is a
+				starting point for loading the rest of the framework. The <code>server.js</code> retrieves an instance of the BAMIMI application from <code>bootstrap/index.js</code>. The first action taken by BAMIMI
+				implement the important packages and apply BAMIMI Kernel
+			</p>
+			<p class="text-content">
+				<strong>Kernel</strong>: When a request comes into the application, it is directed to either the kernel or a specific method in
+				<code>kernel/index.js</code>, depending on the request type. These kernels act as central hubs through which all requests are
+				processed. For now, let's focus on the HTTP kernel, which is defined in <code>kernel/index.js</code> and uses <code>kernel/router</code>.
+				
+				The HTTP kernel is designed with a set of bootstrappers that run both before and after handling a request. These
+				bootstrappers handle tasks such as configuring error handling, setting up logging, detecting the application's
+				environment, and other preliminary setups required before the request is processed. These layers typically deal with
+				BAMIMI's internal configuration, so you usually don’t need to manage them directly.
+				
+				In addition to this, the Kernel manages the flow of the request through the application's middleware stack. This
+				middleware handles tasks like managing HTTP sessions, checking if the application is in maintenance mode, verifying CSRF
+				tokens, and more. We’ll explore these middleware layers in more detail later.
+				
+				The Kernel’s `handle` method is straightforward: it accepts a `Request` and returns a `Response`. You can think of the
+				kernel as the core of your application—feed it an HTTP request, and it will return the corresponding HTTP response.
+			</p>
+		</div>
+		<h5 class="mb-4 mt-4"># Cli Request</h5>
+		<div>
+			<p class="text-content">
+				The first part of the services where most of the work will be done internally by the development team, or ops team. The
+				user will run the command to bin the cli, then their task is to manipulate the cli through <code>routes/cli/index.js</code>, here we
+				are using the <a href="https://www.npmjs.com/package/commander">Commander library</a>.
+				In addition, it also has built-in integration with queue jobs, you can execute jobs via <code>routes/cli/index.js</code>
+			</p>
+		</div>
+	</div>
+</section>
