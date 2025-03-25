@@ -107,7 +107,7 @@ npx @knfs-tech/bamimi-cli@latest email:generate demoEmail -tn demoEmail -job dem
 			<pre class="language-javascript" tabindex="0"><code class="language-javascript">//@iApp/emails/demoEmail.email.js
 "use strict";
 
-const { renderTemplate } = require("@iKernel/mail")();
+const { renderTemplate } = require("@iKernel/mail");
 const QueueManager = require("@iKernel/queue")()
 
 module.exports = (data) => {
